@@ -1,4 +1,4 @@
-package com.hakim.datauploder.model;
+package com.hakim.datauploder.pojo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ExcelFileDetails implements Serializable{
 
-    List<SheetDetails> sheets = new ArrayList<>();
+    List<SheetDetails> sheets = new ArrayList<>(); // Information about each sheet
 
 }

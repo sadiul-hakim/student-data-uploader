@@ -1,4 +1,4 @@
-package com.hakim.datauploder.model;
+package com.hakim.datauploder.model.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

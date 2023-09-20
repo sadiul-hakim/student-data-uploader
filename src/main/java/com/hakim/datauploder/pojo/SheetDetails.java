@@ -1,4 +1,4 @@
-package com.hakim.datauploder.model;
+package com.hakim.datauploder.pojo;
 
 import java.io.Serializable;
 
@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SheetDetails implements Serializable{
     
-    private int skipRow;
-    private String sheetName;
+    private int skipRow; // row number to skip from the first
+    private String sheetName; // Name of the sheet
 }

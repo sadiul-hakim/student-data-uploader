@@ -1,10 +1,11 @@
-package com.hakim.datauploder.model;
+package com.hakim.datauploder.model.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.hakim.datauploder.model.deserializer.ExcelFileDetailsDeserializer;
 import com.hakim.datauploder.model.serializer.ExcelFileDetailsSerializer;
+import com.hakim.datauploder.pojo.ExcelFileDetails;
 
 import jakarta.persistence.AttributeConverter;
 

@@ -6,8 +6,8 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.hakim.datauploder.model.ExcelFileDetails;
-import com.hakim.datauploder.model.SheetDetails;
+import com.hakim.datauploder.pojo.ExcelFileDetails;
+import com.hakim.datauploder.pojo.SheetDetails;
 import com.hakim.datauploder.util.JsonKeys;
 
 public class ExcelFileDetailsSerializer extends JsonSerializer<ExcelFileDetails>{

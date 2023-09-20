@@ -10,8 +10,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hakim.datauploder.model.ExcelFileDetails;
-import com.hakim.datauploder.model.SheetDetails;
+import com.hakim.datauploder.pojo.ExcelFileDetails;
+import com.hakim.datauploder.pojo.SheetDetails;
 import com.hakim.datauploder.util.JsonKeys;
 
 public class ExcelFileDetailsDeserializer extends JsonDeserializer<ExcelFileDetails>{
