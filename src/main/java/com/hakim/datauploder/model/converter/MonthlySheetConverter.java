@@ -4,14 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.hakim.datauploder.model.deserializer.ExcelFileDetailsDeserializer;
-import com.hakim.datauploder.model.serializer.ExcelFileDetailsSerializer;
-import com.hakim.datauploder.pojo.ExcelFileDetails;
-
+import com.hakim.datauploder.model.deserializer.MonthlySheetDeserializer;
+import com.hakim.datauploder.model.serializer.MonthlySheetSerializer;
+import com.hakim.datauploder.pojo.MonthlySheet;
 import jakarta.persistence.AttributeConverter;
 
-public class ExcelFileDetailsConverter implements AttributeConverter<ExcelFileDetails,String>{
-
+public class MonthlySheetConverter implements AttributeConverter<MonthlySheet,String> {
     private static final ObjectMapper mapper;
 
     static{
@@ -19,31 +17,26 @@ public class ExcelFileDetailsConverter implements AttributeConverter<ExcelFileDe
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         SimpleModule simpleModule = new SimpleModule();
-        simpleModule.addDeserializer(ExcelFileDetails.class,new ExcelFileDetailsDeserializer());
-        simpleModule.addSerializer(ExcelFileDetails.class,new ExcelFileDetailsSerializer());
+        simpleModule.addDeserializer(MonthlySheet.class,new MonthlySheetDeserializer());
+        simpleModule.addSerializer(MonthlySheet.class,new MonthlySheetSerializer());
 
         mapper.registerModule(simpleModule);
     }
-
-
     @Override
-    public String convertToDatabaseColumn(ExcelFileDetails attribute) {
+    public String convertToDatabaseColumn(MonthlySheet attribute) {
         try {
             return mapper.writeValueAsString(attribute);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    @Override
-    public ExcelFileDetails convertToEntityAttribute(String dbData) {
-        try {
-            return mapper.readValue(dbData, ExcelFileDetails.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
-    
+
+    @Override
+    public MonthlySheet convertToEntityAttribute(String dbData) {
+        try {
+            return mapper.readValue(dbData, MonthlySheet.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

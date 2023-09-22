@@ -3,10 +3,7 @@ package com.hakim.datauploder.model;
 import com.hakim.datauploder.model.converter.ExcelFileDetailsConverter;
 import com.hakim.datauploder.pojo.ExcelFileDetails;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,9 +15,11 @@ import lombok.NoArgsConstructor;
 public class DataImporter {
     
     @Id
+    @GeneratedValue
     private long id; // 1
 
     private String name; // Student Attendance
+    private int section;
 
     @Convert(converter = ExcelFileDetailsConverter.class)
     @Column(columnDefinition = "JSON")
