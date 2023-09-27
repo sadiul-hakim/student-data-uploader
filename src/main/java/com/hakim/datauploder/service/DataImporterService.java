@@ -20,7 +20,6 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class DataImporterService {
-    private final String STUDENT_ROLL = "Student Roll";
     private final String PRESENT = "P";
 
     private final DataImporterRepo dataImporterRepo;
@@ -36,42 +35,43 @@ public class DataImporterService {
                 .orElseThrow(() -> new RuntimeException("Could not get DataImporter by id : " + dataImporterId));
     }
 
-    public MonthlyPresence importData(InputStream inputStream, long importerId) throws IOException {
+    public MonthlyPresence importData(InputStream inputStream, long importerId, long section) throws IOException {
         ExcelReader excelReader = new ExcelReader(inputStream);
 
         DataImporter importer = getById(importerId);
 
         Map<String, List<String>> data = excelReader.read(importer.getExcelFileDetails());
 
-        MonthlyPresence monthlyPresence = generateMonthlyPresence(data);
-        monthlyPresence.setImporterId(importerId);
+        MonthlyPresence monthlyPresence = generateMonthlyPresence(data,importer.getExcelFileDetails().getSheets().get(0).getMainColumn());
+        monthlyPresence.setSection(section);
 
-        return monthlyPresenceService.save(monthlyPresence);
+        MonthlyPresence existingData = monthlyPresenceService.getBySection(section);
+        if (existingData == null) {
+            return monthlyPresenceService.save(monthlyPresence);
+        }else{
+            List<Presence> presenceList = existingData.getMonthlySheet().getPresenceList();
+            presenceList.addAll(monthlyPresence.getMonthlySheet().getPresenceList());
+        }
+        return monthlyPresenceService.save(existingData);
     }
 
-    private MonthlyPresence generateMonthlyPresence(List<List<String>> data) {
-
-        MonthlyPresence monthlyPresence = new MonthlyPresence();
-
-        return monthlyPresence;
-    }
-
-    private MonthlyPresence generateMonthlyPresence(Map<String, List<String>> data) {
+    private MonthlyPresence generateMonthlyPresence(Map<String, List<String>> data,String mainColumn) {
 
         MonthlyPresence monthlyPresence = new MonthlyPresence();
         MonthlySheet monthlySheet = new MonthlySheet();
 
-        List<String> studentRoll = data.get(STUDENT_ROLL);
+        List<String> mainColumnData = data.get(mainColumn);
         List<Presence> presenceList = new ArrayList<>();
         for (Map.Entry<String, List<String>> entry : data.entrySet()) {
-            if (entry.getKey().equals(STUDENT_ROLL)) continue;
+
+            if (entry.getKey().equalsIgnoreCase(mainColumn)) continue;
             Presence presence = new Presence();
-            presence.setDate(DateUtil.stringToLocalDate(entry.getKey(),DateUtil.DATE_FIRST_FORMATTER));
+            presence.setDate(DateUtil.stringToLocalDate(entry.getKey(), DateUtil.DATE_FIRST_FORMATTER));
 
             List<String> stringList = entry.getValue();
-            for (int i = 0; i < studentRoll.size(); i++){
-                if(stringList.get(i).equalsIgnoreCase(PRESENT)){
-                    presence.getPresentStudentsRoll().add(Double.valueOf(studentRoll.get(i)));
+            for (int i = 0; i < mainColumnData.size(); i++) {
+                if (stringList.get(i).equalsIgnoreCase(PRESENT)) {
+                    presence.getPresentStudentsRoll().add(Double.valueOf(mainColumnData.get(i)));
                 }
             }
 

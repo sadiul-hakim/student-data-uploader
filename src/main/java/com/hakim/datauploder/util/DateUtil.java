@@ -1,11 +1,10 @@
 package com.hakim.datauploder.util;
 
-import javax.swing.text.DateFormatter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class DateUtil {
@@ -46,5 +45,30 @@ public class DateUtil {
 
     public static String format(LocalDateTime dateTime){
         return dateTime.format(DATE_FIRST_FORMATTER);
+    }
+
+    public static Integer[] getDateArray(String date){
+
+        Map<String,Integer> months =new HashMap<>();
+        months.put("Jan",1);
+        months.put("Feb",2);
+        months.put("Mar",3);
+        months.put("Apr",4);
+        months.put("June",6);
+        months.put("July",7);
+        months.put("Aug",8);
+        months.put("Sep",9);
+        months.put("Oct",10);
+        months.put("Nov", 11);
+        months.put("Dec",12);
+
+        if(date == null || date.split(" ").length < 2) return null;
+        String[] dateStringArray = date.split(" ");
+
+        Integer[] dateLong = new Integer[2];
+        dateLong[0] = months.get(dateStringArray[0]);
+        dateLong[1] = Integer.valueOf(dateStringArray[1]);
+
+        return dateLong;
     }
 }

@@ -31,8 +31,10 @@ public class ExcelFileDetailsDeserializer extends JsonDeserializer<ExcelFileDeta
             for (JsonNode sheetNode : sheetsNode) {
                 int skipRow = sheetNode.get(JsonKeys.SKIP_ROW).asInt();
                 String sheetName = sheetNode.get(JsonKeys.SHEET_NAME).asText();
+                String dataType = sheetNode.get(JsonKeys.DATA_TYPE).asText();
+                String mainColumn = sheetNode.get(JsonKeys.MAIN_COLUMN).asText();
 
-                sheets.add(new SheetDetails(skipRow, sheetName));
+                sheets.add(new SheetDetails(skipRow, sheetName,dataType,mainColumn));
             }
         }
 

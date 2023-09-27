@@ -19,8 +19,6 @@ public class DataImporter {
     private long id; // 1
 
     private String name; // Student Attendance
-    private int section;
-
     @Convert(converter = ExcelFileDetailsConverter.class)
     @Column(columnDefinition = "JSON")
     private ExcelFileDetails excelFileDetails; // Information of the excel file

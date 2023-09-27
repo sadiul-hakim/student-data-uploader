@@ -13,4 +13,6 @@ public class SheetDetails implements Serializable{
     
     private int skipRow; // row number to skip from the first
     private String sheetName; // Name of the sheet
+    private String dataType;
+    private String mainColumn;
 }

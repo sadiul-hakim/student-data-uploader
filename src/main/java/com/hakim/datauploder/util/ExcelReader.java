@@ -29,36 +29,43 @@ public class ExcelReader {
             List<String> headers = new ArrayList<>();
             XSSFSheet workbookSheet = workbook.getSheet(sheetDetails.getSheetName());
 
-            for (int j = 0; j < sheetDetails.getSkipRow(); j++) {
 
-                XSSFRow row = workbookSheet.getRow(j);
+            XSSFRow headerRow = workbookSheet.getRow(sheetDetails.getSkipRow());
 
-                for (int k = 0; k < row.getLastCellNum(); k++) {
+            for (int k = 0; k < headerRow.getLastCellNum(); k++) {
 
-                    XSSFCell cell = row.getCell(k);
-                    if (cell.getCellType() == CellType.NUMERIC) {
-                        LocalDateTime dateTime = cell.getLocalDateTimeCellValue();
-                        String format = DateUtil.format(dateTime);
-                        data.put(format, new ArrayList<>());
-                        headers.add(format);
-                    } else {
-                        data.put(cell.getStringCellValue(), new ArrayList<>());
-                        headers.add(cell.getStringCellValue());
-                    }
+                XSSFCell cell = headerRow.getCell(k);
+                if (cell.getCellType() == CellType.NUMERIC) {
+                    LocalDateTime dateTime = cell.getLocalDateTimeCellValue();
+                    String format = DateUtil.format(dateTime);
+                    data.put(format, new ArrayList<>());
+                    headers.add(format);
+                } else {
+
+                    if (cell.getStringCellValue().isEmpty()) continue;
+                    data.put(cell.getStringCellValue(), new ArrayList<>());
+                    headers.add(cell.getStringCellValue());
                 }
             }
 
-            for (int i = sheetDetails.getSkipRow(); i <= workbookSheet.getLastRowNum(); i++) {
+            for (int i = sheetDetails.getSkipRow() + 1; i <= workbookSheet.getLastRowNum(); i++) {
                 XSSFRow row = workbookSheet.getRow(i);
                 for (int k = 0; k < headers.size(); k++) {
                     XSSFCell cell = row.getCell(k);
+
                     List<String> rowData = data.get(headers.get(k));
+
+                    if(cell == null ){
+                        continue;
+                    }
 
                     if (cell.getCellType() == CellType.NUMERIC) {
                         rowData.add(cell.getNumericCellValue() + "");
                     } else if (cell.getCellType() == CellType.FORMULA) {
                         rowData.add(cell.getNumericCellValue() + "");
                     } else {
+
+                        if (cell.getStringCellValue().isEmpty()) continue;
                         rowData.add(cell.getStringCellValue());
                     }
                     data.put(headers.get(k), rowData);

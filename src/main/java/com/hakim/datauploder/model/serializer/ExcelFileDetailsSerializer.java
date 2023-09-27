@@ -12,21 +12,23 @@ import java.io.IOException;
 import java.util.List;
 
 @JsonComponent
-public class ExcelFileDetailsSerializer extends JsonSerializer<ExcelFileDetails>{
+public class ExcelFileDetailsSerializer extends JsonSerializer<ExcelFileDetails> {
 
     @Override
     public void serialize(ExcelFileDetails excelFileDetails, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        
+
         jsonGenerator.writeStartObject();
 
         List<SheetDetails> sheets = excelFileDetails.getSheets();
-        
+
         jsonGenerator.writeArrayFieldStart(JsonKeys.SHEETS);
-        for(SheetDetails sheet : sheets){
+        for (SheetDetails sheet : sheets) {
             jsonGenerator.writeStartObject();
 
             jsonGenerator.writeNumberField(JsonKeys.SKIP_ROW, sheet.getSkipRow());
             jsonGenerator.writeStringField(JsonKeys.SHEET_NAME, sheet.getSheetName());
+            jsonGenerator.writeStringField(JsonKeys.DATA_TYPE, sheet.getDataType());
+            jsonGenerator.writeStringField(JsonKeys.MAIN_COLUMN, sheet.getMainColumn());
 
             jsonGenerator.writeEndObject();
         }
@@ -34,5 +36,5 @@ public class ExcelFileDetailsSerializer extends JsonSerializer<ExcelFileDetails>
 
         jsonGenerator.writeEndObject();
     }
-    
+
 }

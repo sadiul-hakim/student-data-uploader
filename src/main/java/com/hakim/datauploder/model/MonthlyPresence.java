@@ -20,9 +20,7 @@ public class MonthlyPresence implements Serializable {
     @Id
     @GeneratedValue
     private long id;
-
-    private long importerId;
-
+    private long section;
     @Column(columnDefinition = "JSON")
     @Convert(converter = MonthlySheetConverter.class)
     private MonthlySheet monthlySheet;

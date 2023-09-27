@@ -37,16 +37,10 @@ public class DataImporterController {
 
     @PostMapping("/import")
     public ResponseEntity<?> importData(@RequestParam MultipartFile file,
-                                        @RequestParam long importerId) throws IOException {
+                                        @RequestParam long importerId,
+                                        @RequestParam long section) throws IOException {
 
-        MonthlyPresence monthlyPresence = dataImporterService.importData(file.getInputStream(), importerId);
-
-        return ResponseEntity.ok(monthlyPresence);
-    }
-
-    @GetMapping("/get-presence")
-    public ResponseEntity<?> getMonthlyPresence(@RequestParam long presenceId){
-        MonthlyPresence monthlyPresence = monthlyPresenceService.getById(presenceId);
+        MonthlyPresence monthlyPresence = dataImporterService.importData(file.getInputStream(), importerId,section);
 
         return ResponseEntity.ok(monthlyPresence);
     }
