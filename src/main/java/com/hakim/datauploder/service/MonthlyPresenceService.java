@@ -52,26 +52,50 @@ public class MonthlyPresenceService {
         return dateList;
     }
 
-    public Map<LocalDate,List<Double>> getByMonth(long section, String date) {
+    public Map<LocalDate, List<Double>> getByMonth(long section, String date) {
 
-        Map<LocalDate,List<Double>> rollMap = new HashMap<>();
+        Map<LocalDate, List<Double>> rollMap = new HashMap<>();
         MonthlyPresence monthlyPresence = getBySection(section);
 
         List<Presence> presenceList = monthlyPresence.getMonthlySheet().getPresenceList();
         if (presenceList.isEmpty()) return rollMap;
 
-        Integer[] dateArray = DateUtil.getDateArray(date);
+        Integer[] dateArray = DateUtil.getDateArray(date, false);
         assert dateArray != null;
         for (Presence presence : presenceList) {
-            if (presence.getDate().getMonth().getValue() == dateArray[0] && presence.getDate().getYear() == dateArray[1]) {
-                rollMap.put(presence.getDate(),presence.getPresentStudentsRoll());
+            if (presence.getDate().getMonth().getValue() == dateArray[0] &&
+                    presence.getDate().getYear() == dateArray[1]) {
+
+                rollMap.put(presence.getDate(), presence.getPresentStudentsRoll());
             }
         }
 
         return rollMap;
     }
 
-    public List<LocalDate> getByMonthAndStudent(long section, String date,long student) {
+    public List<Double> getByDay(long section, String date) {
+
+        List<Double> rolls = new ArrayList<>();
+        MonthlyPresence monthlyPresence = getBySection(section);
+
+        List<Presence> presenceList = monthlyPresence.getMonthlySheet().getPresenceList();
+        if (presenceList.isEmpty()) return rolls;
+
+        Integer[] dateArray = DateUtil.getDateArray(date, true);
+        assert dateArray != null;
+        for (Presence presence : presenceList) {
+            if (presence.getDate().getDayOfMonth() == dateArray[0] &&
+                    presence.getDate().getMonth().getValue() == dateArray[1] &&
+                    presence.getDate().getYear() == dateArray[2]) {
+
+                rolls.addAll(presence.getPresentStudentsRoll());
+            }
+        }
+
+        return rolls;
+    }
+
+    public List<LocalDate> getByMonthAndStudent(long section, String date, long student) {
 
         List<LocalDate> dateList = new ArrayList<>();
         MonthlyPresence monthlyPresence = getBySection(section);
@@ -79,12 +103,12 @@ public class MonthlyPresenceService {
         List<Presence> presenceList = monthlyPresence.getMonthlySheet().getPresenceList();
         if (presenceList.isEmpty()) return dateList;
 
-        Integer[] dateArray = DateUtil.getDateArray(date);
+        Integer[] dateArray = DateUtil.getDateArray(date, false);
         assert dateArray != null;
         for (Presence presence : presenceList) {
             if (presence.getDate().getMonth().getValue() == dateArray[0] &&
                     presence.getDate().getYear() == dateArray[1] &&
-                    presence.getPresentStudentsRoll().contains(Double.parseDouble(student+""))) {
+                    presence.getPresentStudentsRoll().contains(Double.parseDouble(student + ""))) {
                 dateList.add(presence.getDate());
             }
         }

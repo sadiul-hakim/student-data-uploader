@@ -47,13 +47,14 @@ public class DateUtil {
         return dateTime.format(DATE_FIRST_FORMATTER);
     }
 
-    public static Integer[] getDateArray(String date){
+    public static Integer[] getDateArray(String date,boolean includeDate){
 
         Map<String,Integer> months =new HashMap<>();
         months.put("Jan",1);
         months.put("Feb",2);
         months.put("Mar",3);
         months.put("Apr",4);
+        months.put("May",5);
         months.put("June",6);
         months.put("July",7);
         months.put("Aug",8);
@@ -65,9 +66,17 @@ public class DateUtil {
         if(date == null || date.split(" ").length < 2) return null;
         String[] dateStringArray = date.split(" ");
 
-        Integer[] dateLong = new Integer[2];
-        dateLong[0] = months.get(dateStringArray[0]);
-        dateLong[1] = Integer.valueOf(dateStringArray[1]);
+        int index = includeDate ? 3 : 2;
+        Integer[] dateLong = new Integer[index];
+
+        if(includeDate){
+            dateLong[0] = Integer.valueOf(dateStringArray[0]);
+            dateLong[1] = months.get(dateStringArray[1]);
+            dateLong[2] = Integer.valueOf(dateStringArray[2]);
+        }else {
+            dateLong[0] = months.get(dateStringArray[0]);
+            dateLong[1] = Integer.valueOf(dateStringArray[1]);
+        }
 
         return dateLong;
     }

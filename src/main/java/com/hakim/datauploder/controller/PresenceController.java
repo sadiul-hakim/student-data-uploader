@@ -47,6 +47,13 @@ public class PresenceController {
         return ResponseEntity.ok(rolls);
     }
 
+    @GetMapping("/get-by-day")
+    public ResponseEntity<?> getByDay(@RequestParam long section,@RequestParam String date){
+        List<Double> rolls = monthlyPresenceService.getByDay(section,date);
+
+        return ResponseEntity.ok(rolls);
+    }
+
     @GetMapping("/get-by-month-and-student")
     public ResponseEntity<?> getByMonthAndStudent(@RequestParam long section,
                                                   @RequestParam String date,
