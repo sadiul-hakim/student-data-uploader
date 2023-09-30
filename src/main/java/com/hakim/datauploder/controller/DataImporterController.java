@@ -3,7 +3,6 @@ package com.hakim.datauploder.controller;
 import com.hakim.datauploder.model.DataImporter;
 import com.hakim.datauploder.model.MonthlyPresence;
 import com.hakim.datauploder.service.DataImporterService;
-import com.hakim.datauploder.service.MonthlyPresenceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import java.util.Collections;
 public class DataImporterController {
     
     private final DataImporterService dataImporterService;
-    private final MonthlyPresenceService monthlyPresenceService;
 
     @PostMapping("/save")
     public ResponseEntity<?> upload(@RequestBody DataImporter dataImporter){
