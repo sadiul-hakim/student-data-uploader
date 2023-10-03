@@ -20,26 +20,35 @@ public class ExcelReader {
         workbook = (XSSFWorkbook) WorkbookFactory.create(inputStream);
     }
 
+    /**
+     * This method is used to read presence from Excel sheet.
+     */
     public Map<String, List<String>> read(ExcelFileDetails details) throws IOException {
         Map<String, List<String>> data = new LinkedHashMap<>();
 
-        List<SheetDetails> sheets = details.getSheets();
+        List<SheetDetails> detailsList = details.getSheets();
 
-        for (SheetDetails sheetDetails : sheets) {
+        // Loop over the Excel sheet and extract presence
+        for (SheetDetails sheetDetails : detailsList) {
+
             List<String> headers = new ArrayList<>();
+
+            // Find the sheet from Excel workbook
             XSSFSheet workbookSheet = workbook.getSheet(sheetDetails.getSheetName());
 
-
+            // Loop over the first row and generate a headers list
+            // If the cell type is a Number, Then in our case the header is Date type
+            // Otherwise, It is a String
             XSSFRow headerRow = workbookSheet.getRow(sheetDetails.getSkipRow());
-
             for (int k = 0; k < headerRow.getLastCellNum(); k++) {
 
                 XSSFCell cell = headerRow.getCell(k);
                 if (cell.getCellType() == CellType.NUMERIC) {
+
                     LocalDateTime dateTime = cell.getLocalDateTimeCellValue();
-                    String format = DateUtil.format(dateTime);
-                    data.put(format, new ArrayList<>());
-                    headers.add(format);
+                    String dateString = DateUtil.format(dateTime);
+                    data.put(dateString, new ArrayList<>());
+                    headers.add(dateString);
                 } else {
 
                     if (cell.getStringCellValue().isEmpty()) continue;
@@ -48,14 +57,17 @@ public class ExcelReader {
                 }
             }
 
+            // Loop over other rows and extract data
             for (int i = sheetDetails.getSkipRow() + 1; i <= workbookSheet.getLastRowNum(); i++) {
+
+                // Loop over the headers list and extract values of that cell and put in data object.
                 XSSFRow row = workbookSheet.getRow(i);
                 for (int k = 0; k < headers.size(); k++) {
                     XSSFCell cell = row.getCell(k);
 
                     List<String> rowData = data.get(headers.get(k));
 
-                    if(cell == null ){
+                    if(cell == null){
                         continue;
                     }
 

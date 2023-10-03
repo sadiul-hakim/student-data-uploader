@@ -9,4 +9,7 @@ public class JsonKeys{
     public static final String PRESENT_STUDENTS_ROLL = "presentStudentsRoll";
     public static final String DATA_TYPE = "dataType";
     public static final String MAIN_COLUMN = "mainColumn";
+    public static final String FEES = "fees";
+    public static final String STUDENT_FEES = "studentFees";
+    public static final String STUDENT_ROLL = "studentRoll";
 }
