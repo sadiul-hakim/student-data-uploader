@@ -1,4 +1,4 @@
-package com.hakim.datauploder.util;
+package com.hakim.datauploder.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Configurable;

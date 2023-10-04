@@ -57,16 +57,7 @@ public class DataImporterService {
                 feeData.setSection(section);
                 feeData.setDataType(importer.getDataSaving().getDataType().name());
 
-                FeeData existingData = feeDataService.getBySectionAndDataType(section, importer.getDataSaving().getDataType().name());
-                if (existingData == null) {
-                    FeeData save = feeDataService.save(feeData);
-
-                    return save != null;
-                } else {
-                    existingData.getSheetData().getStudentFees().addAll(feeData.getSheetData().getStudentFees());
-                    existingData.getSheetData().setDate(LocalDate.now());
-                }
-                FeeData save = feeDataService.save(existingData);
+                FeeData save = feeDataService.save(feeData);
                 return save != null;
             }
             case PRESENCE -> {

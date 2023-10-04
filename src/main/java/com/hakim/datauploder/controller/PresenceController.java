@@ -20,36 +20,29 @@ public class PresenceController {
     private final MonthlyPresenceService monthlyPresenceService;
 
     @GetMapping("/get")
-    public ResponseEntity<?> getMonthlyPresence(@RequestParam long presenceId){
+    public ResponseEntity<?> getMonthlyPresence(@RequestParam long presenceId) {
         MonthlyPresence monthlyPresence = monthlyPresenceService.getById(presenceId);
 
         return ResponseEntity.ok(monthlyPresence);
     }
 
-    @GetMapping("/get-by-section")
-    public ResponseEntity<?> getBySection(@RequestParam long section){
-        MonthlyPresence monthlyPresence = monthlyPresenceService.getBySection(section);
-
-        return ResponseEntity.ok(monthlyPresence);
-    }
-
     @GetMapping("/get-by-student")
-    public ResponseEntity<?> getByStudent(@RequestParam long student,@RequestParam long section){
-        List<LocalDate> dates = monthlyPresenceService.getByStudent(student, section);
+    public ResponseEntity<?> getByStudent(@RequestParam long student, @RequestParam long section, @RequestParam String dataType) {
+        List<LocalDate> dates = monthlyPresenceService.getByStudent(student, section, dataType);
 
         return ResponseEntity.ok(dates);
     }
 
     @GetMapping("/get-by-month")
-    public ResponseEntity<?> getByMonth(@RequestParam long section,@RequestParam String date){
-        Map<LocalDate,List<Double>> rolls = monthlyPresenceService.getByMonth(section,date);
+    public ResponseEntity<?> getByMonth(@RequestParam long section, @RequestParam String dataType, @RequestParam String date) {
+        Map<LocalDate, List<Double>> rolls = monthlyPresenceService.getByMonth(section, dataType, date);
 
         return ResponseEntity.ok(rolls);
     }
 
     @GetMapping("/get-by-day")
-    public ResponseEntity<?> getByDay(@RequestParam long section,@RequestParam String date){
-        List<Double> rolls = monthlyPresenceService.getByDay(section,date);
+    public ResponseEntity<?> getByDay(@RequestParam long section, @RequestParam String dataType, @RequestParam String date) {
+        List<Double> rolls = monthlyPresenceService.getByDay(section, dataType, date);
 
         return ResponseEntity.ok(rolls);
     }
@@ -57,8 +50,9 @@ public class PresenceController {
     @GetMapping("/get-by-month-and-student")
     public ResponseEntity<?> getByMonthAndStudent(@RequestParam long section,
                                                   @RequestParam String date,
-                                                  @RequestParam long student){
-        List<LocalDate> dates = monthlyPresenceService.getByMonthAndStudent(section,date,student);
+                                                  @RequestParam long student,
+                                                  @RequestParam String dataType) {
+        List<LocalDate> dates = monthlyPresenceService.getByMonthAndStudent(section, date, student, dataType);
 
         return ResponseEntity.ok(dates);
     }

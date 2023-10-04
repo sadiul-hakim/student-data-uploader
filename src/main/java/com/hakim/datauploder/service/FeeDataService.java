@@ -1,12 +1,14 @@
 package com.hakim.datauploder.service;
 
+import com.hakim.datauploder.model.Fee;
 import com.hakim.datauploder.model.FeeData;
+import com.hakim.datauploder.pojo.StudentFee;
 import com.hakim.datauploder.repository.FeeDataRepo;
+import com.hakim.datauploder.util.DateUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.Map;
 public class FeeDataService {
 
     private final FeeDataRepo repo;
+    private final FeeService feeService;
 
     public FeeData save(FeeData fee) {
         return repo.save(fee);
@@ -28,47 +31,60 @@ public class FeeDataService {
                 .orElseThrow(() -> new RuntimeException("Could not find by id: " + id));
     }
 
-    public FeeData getBySection(long section) {
+    public List<FeeData> getBySectionAndDataType(long section, String dataType) {
 
-        return repo.findBySection(section)
-                .orElse(null);
+        return repo.findBySectionAndDataType(section, dataType);
     }
 
-    public FeeData getBySectionAndDataType(long section, String dataType) {
+    public List<FeeData> getByDataType(String dataType) {
 
-        return repo.findBySectionAndDataType(section, dataType)
-                .orElse(null);
+        return repo.findByDataType(dataType);
     }
 
-    public List<LocalDate> getByStudent(long student, long section) {
+    public Map<String, Map<String, Map<String, Double>>> getByStudent(double student, long section, String dataType) {
 
-        List<LocalDate> dateList = new ArrayList<>();
+        Map<String, Map<String, Map<String, Double>>> feesWithRoll = new HashMap<>();
 
+        List<FeeData> feeDataList = getBySectionAndDataType(section, dataType);
+        Map<String, Map<String, Double>> feeWithDate = new HashMap<>();
+        for (FeeData feeData : feeDataList) {
 
-        return dateList;
+            List<StudentFee> studentFees = feeData.getSheetData().getStudentFees();
+            for (StudentFee studentFee : studentFees) {
+
+                String roll = studentFee.getStudentRoll();
+                String date = DateUtil.format(feeData.getSheetData().getDate());
+                if (Double.parseDouble(roll) == student) {
+
+                    feeWithDate.put(date, studentFee.getFees());
+                    feesWithRoll.put(roll, feeWithDate);
+                }
+            }
+        }
+
+        for (Map.Entry<String, Map<String, Map<String, Double>>> entry : feesWithRoll.entrySet()) {
+
+            Map<String, Map<String, Double>> feesWithName = getFeesWithName(entry.getValue());
+            feesWithRoll.put(entry.getKey(),feesWithName);
+        }
+
+        return feesWithRoll;
     }
 
-    public Map<LocalDate, List<Double>> getByMonth(long section, String date) {
+    private Map<String, Map<String, Double>> getFeesWithName(Map<String, Map<String, Double>> fees) {
 
-        Map<LocalDate, List<Double>> rollMap = new HashMap<>();
+        for (Map.Entry<String, Map<String, Double>> stringMapEntry : fees.entrySet()) {
 
+            Map<String, Double> temp = new HashMap<>();
+            for (Map.Entry<String, Double> entry : stringMapEntry.getValue().entrySet()) {
 
-        return rollMap;
-    }
+                Fee fee = feeService.getById(Long.parseLong(entry.getKey()));
+                temp.put(fee.getName(), entry.getValue());
+            }
 
-    public List<Double> getByDay(long section, String date) {
+            fees.put(stringMapEntry.getKey(),temp);
+        }
 
-        List<Double> rolls = new ArrayList<>();
-
-
-        return rolls;
-    }
-
-    public List<LocalDate> getByMonthAndStudent(long section, String date, long student) {
-
-        List<LocalDate> dateList = new ArrayList<>();
-
-
-        return dateList;
+        return fees;
     }
 }
