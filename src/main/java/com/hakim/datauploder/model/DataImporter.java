@@ -1,6 +1,8 @@
 package com.hakim.datauploder.model;
 
+import com.hakim.datauploder.model.converter.DataSavingConverter;
 import com.hakim.datauploder.model.converter.ExcelFileDetailsConverter;
+import com.hakim.datauploder.pojo.DataSaving;
 import com.hakim.datauploder.pojo.ExcelFileDetails;
 
 import jakarta.persistence.*;
@@ -21,5 +23,9 @@ public class DataImporter {
     private String name; // Student Attendance
     @Convert(converter = ExcelFileDetailsConverter.class)
     @Column(columnDefinition = "JSON")
-    private ExcelFileDetails excelFileDetails; // Information of the excel file
+    private ExcelFileDetails excelFileDetails; // Information of the Excel file
+
+    @Convert(converter = DataSavingConverter.class)
+    @Column(columnDefinition = "JSON")
+    private DataSaving dataSaving;
 }

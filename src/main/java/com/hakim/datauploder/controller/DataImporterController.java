@@ -1,7 +1,6 @@
 package com.hakim.datauploder.controller;
 
 import com.hakim.datauploder.model.DataImporter;
-import com.hakim.datauploder.model.MonthlyPresence;
 import com.hakim.datauploder.service.DataImporterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +37,12 @@ public class DataImporterController {
                                         @RequestParam long importerId,
                                         @RequestParam long section) throws IOException {
 
-        MonthlyPresence monthlyPresence = dataImporterService.importData(file.getInputStream(), importerId,section);
+        boolean saved = dataImporterService.importData(file.getInputStream(), importerId,section);
 
-        return ResponseEntity.ok(monthlyPresence);
+        if(!saved){
+            return ResponseEntity.ok(Collections.singletonMap("error","Could not import data"));
+        }
+
+        return ResponseEntity.ok(Collections.singletonMap("message","successfully imported data!"));
     }
 }

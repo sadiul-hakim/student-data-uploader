@@ -1,6 +1,5 @@
-package com.hakim.datauploder.pojo;
+package com.hakim.datauploder.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -12,13 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentData {
+public class Fee {
 
     @Id
     @GeneratedValue
     private long id;
-    @Column
-    private long section;
-    @Column
-    private String dataType;
+    private String name;
 }

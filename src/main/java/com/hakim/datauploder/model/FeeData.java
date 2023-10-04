@@ -14,11 +14,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Table(name = "student_data")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class FeeData extends StudentData implements Serializable {
-
-    @Id
-    @GeneratedValue
-    private long id;
 
     @Column(columnDefinition = "JSON")
     @Convert(converter = FeeSheetConverter.class)

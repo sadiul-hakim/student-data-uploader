@@ -1,8 +1,8 @@
 package com.hakim.datauploder.util;
 
 public enum DataType {
-    DATE("date"),
-    DEAL("deal");
+    FEE("fee"),
+    PRESENCE("presence");
 
     private final String name;
 

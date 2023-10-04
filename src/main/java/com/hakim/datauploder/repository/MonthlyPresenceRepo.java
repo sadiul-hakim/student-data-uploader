@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface MonthlyPresenceRepo extends JpaRepository<MonthlyPresence,Long> {
     Optional<MonthlyPresence> findBySection(long section);
+    Optional<MonthlyPresence> findBySectionAndDataType(long section,String dataType);
 }

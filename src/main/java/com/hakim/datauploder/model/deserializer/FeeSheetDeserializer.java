@@ -7,10 +7,12 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hakim.datauploder.pojo.FeeSheet;
 import com.hakim.datauploder.pojo.StudentFee;
+import com.hakim.datauploder.util.DateUtil;
 import com.hakim.datauploder.util.JsonKeys;
 import com.hakim.datauploder.util.JsonUtil;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +44,12 @@ public class FeeSheetDeserializer extends JsonDeserializer<FeeSheet> {
             }
         }
 
+        String dateString = jsonNode.get(JsonKeys.DATE).asText();
+        LocalDate date = DateUtil.stringToLocalDate(dateString,DateUtil.DATE_FIRST_FORMATTER);
+
         feeSheet.setStudentFees(studentFees);
+        feeSheet.setDate(date);
+
         return feeSheet;
     }
 }

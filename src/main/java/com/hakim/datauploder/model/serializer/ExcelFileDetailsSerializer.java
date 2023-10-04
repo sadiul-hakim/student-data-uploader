@@ -27,7 +27,6 @@ public class ExcelFileDetailsSerializer extends JsonSerializer<ExcelFileDetails>
 
             jsonGenerator.writeNumberField(JsonKeys.SKIP_ROW, sheet.getSkipRow());
             jsonGenerator.writeStringField(JsonKeys.SHEET_NAME, sheet.getSheetName());
-            jsonGenerator.writeStringField(JsonKeys.DATA_TYPE, sheet.getDataType());
             jsonGenerator.writeStringField(JsonKeys.MAIN_COLUMN, sheet.getMainColumn());
 
             jsonGenerator.writeEndObject();

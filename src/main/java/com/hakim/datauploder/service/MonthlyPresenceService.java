@@ -34,12 +34,17 @@ public class MonthlyPresenceService {
                 .orElse(null);
     }
 
+    public MonthlyPresence getBySectionAndDataType(long section, String dataType) {
+        return repo.findBySectionAndDataType(section,dataType)
+                .orElse(null);
+    }
+
     public List<LocalDate> getByStudent(long student, long section) {
 
         List<LocalDate> dateList = new ArrayList<>();
         MonthlyPresence monthlyPresence = getBySection(section);
 
-        List<Presence> presenceList = monthlyPresence.getMonthlySheet().getPresenceList();
+        List<Presence> presenceList = monthlyPresence.getSheetData().getPresenceList();
         if (presenceList.isEmpty()) return dateList;
 
         for (Presence presence : presenceList) {
@@ -57,7 +62,7 @@ public class MonthlyPresenceService {
         Map<LocalDate, List<Double>> rollMap = new HashMap<>();
         MonthlyPresence monthlyPresence = getBySection(section);
 
-        List<Presence> presenceList = monthlyPresence.getMonthlySheet().getPresenceList();
+        List<Presence> presenceList = monthlyPresence.getSheetData().getPresenceList();
         if (presenceList.isEmpty()) return rollMap;
 
         Integer[] dateArray = DateUtil.getDateArray(date, false);
@@ -78,7 +83,7 @@ public class MonthlyPresenceService {
         List<Double> rolls = new ArrayList<>();
         MonthlyPresence monthlyPresence = getBySection(section);
 
-        List<Presence> presenceList = monthlyPresence.getMonthlySheet().getPresenceList();
+        List<Presence> presenceList = monthlyPresence.getSheetData().getPresenceList();
         if (presenceList.isEmpty()) return rolls;
 
         Integer[] dateArray = DateUtil.getDateArray(date, true);
@@ -100,7 +105,7 @@ public class MonthlyPresenceService {
         List<LocalDate> dateList = new ArrayList<>();
         MonthlyPresence monthlyPresence = getBySection(section);
 
-        List<Presence> presenceList = monthlyPresence.getMonthlySheet().getPresenceList();
+        List<Presence> presenceList = monthlyPresence.getSheetData().getPresenceList();
         if (presenceList.isEmpty()) return dateList;
 
         Integer[] dateArray = DateUtil.getDateArray(date, false);

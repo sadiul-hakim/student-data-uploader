@@ -34,7 +34,8 @@ public class SecurityConfig {
         String[] publicApis = {
                 "/data-importer/**",
                 "/presence/**",
-                "/student/**"
+                "/student/**",
+                "/fee/**"
         };
 
         String[] permitAll = {

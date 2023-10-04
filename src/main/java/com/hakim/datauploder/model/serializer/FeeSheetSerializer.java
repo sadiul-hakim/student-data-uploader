@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.hakim.datauploder.pojo.FeeSheet;
 import com.hakim.datauploder.pojo.StudentFee;
+import com.hakim.datauploder.util.DateUtil;
 import com.hakim.datauploder.util.JsonKeys;
 import com.hakim.datauploder.util.JsonUtil;
 
@@ -27,6 +28,9 @@ public class FeeSheetSerializer extends JsonSerializer<FeeSheet> {
             }
         }
         jsonGenerator.writeEndArray();
+
+        jsonGenerator.writeStringField(JsonKeys.DATE, DateUtil.format(sheet.getDate()));
+
         jsonGenerator.writeEndObject();
     }
 }
