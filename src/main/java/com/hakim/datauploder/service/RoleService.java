@@ -6,6 +6,7 @@ import com.hakim.datauploder.repository.RoleRepo;
 import com.hakim.datauploder.repository.UserRepo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public class RoleService {
     public Role save(Role role){
         return roleRepo.save(role);
     }
+
+    @Cacheable("role.getById")
     public Role getRole(long id){
         return roleRepo.findById(id)
                 .orElseThrow(()-> new RuntimeException("Could not get role by id : "+id));

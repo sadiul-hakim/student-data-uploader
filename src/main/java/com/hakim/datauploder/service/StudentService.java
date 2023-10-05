@@ -3,6 +3,7 @@ package com.hakim.datauploder.service;
 import com.hakim.datauploder.model.Student;
 import com.hakim.datauploder.repository.StudentRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +17,9 @@ public class StudentService {
         return studentRepo.save(student);
     }
 
-    public Student getById(long studentRoll){
-        return studentRepo.findById(studentRoll)
+    @Cacheable("student.getById")
+    public Student getById(long studentRoll,long section){
+        return studentRepo.findByStudentRollAndSection(studentRoll,section)
                 .orElseThrow(() -> new RuntimeException("Could not find student by roll: " + studentRoll));
     }
 

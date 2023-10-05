@@ -3,6 +3,7 @@ package com.hakim.datauploder.service;
 import com.hakim.datauploder.model.Fee;
 import com.hakim.datauploder.repository.FeeRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +19,14 @@ public class FeeService {
         return feeRepo.save(fee);
     }
 
+    @Cacheable("fee.getById")
     public Fee getById(long id) {
 
         return feeRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Fee not found with id : " + id));
     }
 
+    @Cacheable("fee.getByName")
     public Fee getByName(String name) {
 
         return feeRepo.findByName(name)

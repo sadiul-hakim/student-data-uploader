@@ -3,6 +3,7 @@ package com.hakim.datauploder.service;
 import com.hakim.datauploder.model.User;
 import com.hakim.datauploder.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
+
+    @Cacheable("user.getById")
     public User getUser(long id){
         return userRepo.findById(id)
                 .orElseThrow(()-> new RuntimeException("Could not get user by id : "+id));

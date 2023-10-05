@@ -20,15 +20,15 @@ public class ResultDataController {
 
     @GetMapping("/get")
     public ResponseEntity<?> getFeeData(@RequestParam long feeId){
-        ResultData resultData = resultDataService.getById(feeId);
 
+        ResultData resultData = resultDataService.getById(feeId);
         return ResponseEntity.ok(resultData);
     }
 
     @GetMapping("/get-by-section-and-datatype")
     public ResponseEntity<?> getBySectionAndDataType(@RequestParam long section,@RequestParam String dataType){
-        List<ResultData> resultData = resultDataService.getBySectionAndDataType(section, dataType);
 
+        List<ResultData> resultData = resultDataService.getBySectionAndDataType(section, dataType);
         return ResponseEntity.ok(resultData);
     }
 

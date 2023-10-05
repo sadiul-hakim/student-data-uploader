@@ -7,6 +7,7 @@ import com.hakim.datauploder.util.DateUtil;
 import com.hakim.datauploder.util.ExcelReader;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class DataImporterService {
         DataImporter save = dataImporterRepo.save(dataImporter);
     }
 
+    @Cacheable("dataImporter.getById")
     public DataImporter getById(long dataImporterId) {
         return dataImporterRepo.findById(dataImporterId)
                 .orElseThrow(() -> new RuntimeException("Could not get DataImporter by id : " + dataImporterId));

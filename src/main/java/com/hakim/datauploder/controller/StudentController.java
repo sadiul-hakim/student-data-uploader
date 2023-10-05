@@ -28,9 +28,9 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedStudent);
     }
 
-    @GetMapping("/{studentRoll}")
-    public ResponseEntity<?> getStudent(@PathVariable long studentRoll){
-        Student student = studentService.getById(studentRoll);
+    @GetMapping("/get")
+    public ResponseEntity<?> getStudent(@RequestParam long studentRoll,@RequestParam long section){
+        Student student = studentService.getById(studentRoll,section);
 
         if(student == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error","Could not save Student."));
