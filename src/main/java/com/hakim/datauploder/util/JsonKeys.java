@@ -12,4 +12,8 @@ public class JsonKeys{
     public static final String FEES = "fees";
     public static final String STUDENT_FEES = "studentFees";
     public static final String STUDENT_ROLL = "studentRoll";
+    public static final String RESULT_SHEET = "resultSheet";
+    public static final String EXAM_NAME = "examName";
+    public static final String STUDENT_RESULTS = "studentResults";
+    public static final String RESULT = "result";
 }

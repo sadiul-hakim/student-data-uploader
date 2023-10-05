@@ -1,13 +1,7 @@
 package com.hakim.datauploder.service;
 
-import com.hakim.datauploder.model.DataImporter;
-import com.hakim.datauploder.model.Fee;
-import com.hakim.datauploder.model.FeeData;
-import com.hakim.datauploder.model.MonthlyPresence;
-import com.hakim.datauploder.pojo.FeeSheet;
-import com.hakim.datauploder.pojo.MonthlySheet;
-import com.hakim.datauploder.pojo.Presence;
-import com.hakim.datauploder.pojo.StudentFee;
+import com.hakim.datauploder.model.*;
+import com.hakim.datauploder.pojo.*;
 import com.hakim.datauploder.repository.DataImporterRepo;
 import com.hakim.datauploder.util.DateUtil;
 import com.hakim.datauploder.util.ExcelReader;
@@ -31,6 +25,8 @@ public class DataImporterService {
     private final MonthlyPresenceService monthlyPresenceService;
     private final FeeDataService feeDataService;
     private final FeeService feeService;
+    private final SubjectService subjectService;
+    private final ResultDataService resultDataService;
 
     public void save(DataImporter dataImporter) {
         DataImporter save = dataImporterRepo.save(dataImporter);
@@ -41,7 +37,7 @@ public class DataImporterService {
                 .orElseThrow(() -> new RuntimeException("Could not get DataImporter by id : " + dataImporterId));
     }
 
-    public boolean importData(InputStream inputStream, long importerId, long section) throws IOException {
+    public boolean importData(InputStream inputStream, long importerId, long section,String fileName) throws IOException {
         ExcelReader excelReader = new ExcelReader(inputStream);
 
         DataImporter importer = getById(importerId);
@@ -58,6 +54,17 @@ public class DataImporterService {
                 feeData.setDataType(importer.getDataSaving().getDataType().name());
 
                 FeeData save = feeDataService.save(feeData);
+                return save != null;
+            }
+            case EXAM_RESULT -> {
+                Map<String, List<String>> data = excelReader.read(importer.getExcelFileDetails());
+
+                String[] fileNameArr = fileName.split("\\.");
+                ResultData resultData = generateResultData(data, importer.getExcelFileDetails().getSheets().get(0).getMainColumn(),fileNameArr[0]);
+                resultData.setSection(section);
+                resultData.setDataType(importer.getDataSaving().getDataType().name());
+
+                ResultData save = resultDataService.save(resultData);
                 return save != null;
             }
             case PRESENCE -> {
@@ -152,5 +159,45 @@ public class DataImporterService {
         feeData.setSheetData(feeSheet);
 
         return feeData;
+    }
+
+    private ResultData generateResultData(Map<String, List<String>> data, String mainColumn,String examName) {
+
+        ResultData resultData = new ResultData();
+        ResultSheet resultSheet = new ResultSheet();
+
+        List<String> rolls = data.get(mainColumn);
+        List<StudentResult> studentResults = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : data.entrySet()) {
+
+            if (entry.getKey().equals(mainColumn)) continue;
+            Subject subject = subjectService.getByName(entry.getKey());
+
+            for (int i = 0; i < rolls.size(); i++) {
+
+                StudentResult studentResult = null;
+                for (StudentResult result : studentResults) {
+                    if (result.getStudentRoll().equals(rolls.get(i))) {
+                        studentResult = result;
+                    }
+                }
+
+                if (studentResult == null) {
+                    studentResult = new StudentResult();
+                    studentResult.setStudentRoll(rolls.get(i));
+                    studentResult.getResult().put(subject.getId() + "", Double.valueOf(entry.getValue().get(i)));
+                    studentResults.add(studentResult);
+                } else {
+                    studentResult.getResult().put(subject.getId() + "", Double.valueOf(entry.getValue().get(i)));
+                }
+            }
+        }
+
+        resultSheet.setStudentResults(studentResults);
+        resultSheet.setDate(LocalDate.now());
+        resultSheet.setExamName(examName);
+
+        resultData.setSheetData(resultSheet);
+        return resultData;
     }
 }

@@ -2,7 +2,8 @@ package com.hakim.datauploder.util;
 
 public enum DataType {
     FEE("fee"),
-    PRESENCE("presence");
+    PRESENCE("presence"),
+    EXAM_RESULT("exam_result");
 
     private final String name;
 

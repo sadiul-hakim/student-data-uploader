@@ -36,7 +36,9 @@ public class SecurityConfig {
                 "/presence/**",
                 "/student/**",
                 "/fee/**",
-                "/fee-data/**"
+                "/fee-data/**",
+                "/subject/**",
+                "/result-data/**"
         };
 
         String[] permitAll = {

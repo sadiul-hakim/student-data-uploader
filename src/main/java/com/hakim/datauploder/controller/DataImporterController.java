@@ -37,7 +37,7 @@ public class DataImporterController {
                                         @RequestParam long importerId,
                                         @RequestParam long section) throws IOException {
 
-        boolean saved = dataImporterService.importData(file.getInputStream(), importerId,section);
+        boolean saved = dataImporterService.importData(file.getInputStream(), importerId,section,file.getOriginalFilename());
 
         if(!saved){
             return ResponseEntity.ok(Collections.singletonMap("error","Could not import data"));
