@@ -8,18 +8,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Subject {
+public class Section {
 
     @Id
     @GeneratedValue
     private long id;
     private String name;
-    private int code;
-    private int maxNumber;
-    private int section;
-    private int department;
-    private int year;
 }

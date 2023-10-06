@@ -20,5 +20,9 @@ public class StudentData {
     @Column
     private long section;
     @Column
-    private String dataType;
+    private long department;
+    @Column
+    private long year;
+    @Column
+    private long dataType;
 }

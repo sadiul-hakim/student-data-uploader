@@ -3,23 +3,20 @@ package com.hakim.datauploder.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Subject {
+@Table(name = "data_type")
+public class DataTypeModel {
 
     @Id
     @GeneratedValue
     private long id;
-    private String name;
-    private int code;
-    private int maxNumber;
-    private int section;
-    private int department;
-    private int year;
+    private String type;
 }

@@ -15,7 +15,7 @@ public class DataSavingSerializer extends JsonSerializer<DataSaving> {
         jsonGenerator.writeStartObject();
 
         if (dataSaving.getDataType() != null) {
-            jsonGenerator.writeStringField(JsonKeys.DATA_TYPE, dataSaving.getDataType().name());
+            jsonGenerator.writeNumberField(JsonKeys.DATA_TYPE, dataSaving.getDataType().getId());
         }
 
         jsonGenerator.writeEndObject();

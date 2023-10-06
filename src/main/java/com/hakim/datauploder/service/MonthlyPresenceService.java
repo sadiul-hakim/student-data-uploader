@@ -29,15 +29,15 @@ public class MonthlyPresenceService {
                 .orElseThrow(() -> new RuntimeException("Could not find by id: " + id));
     }
 
-    public MonthlyPresence getBySectionAndDataType(long section, String dataType) {
-        return repo.findBySectionAndDataType(section, dataType)
+    public MonthlyPresence getByFields(long section, long department, long year, long dataType) {
+        return repo.findBySectionAndDepartmentAndYearAndDataType(section, department, year, dataType)
                 .orElse(null);
     }
 
-    public List<LocalDate> getByStudent(long student, long section, String dataType) {
+    public List<LocalDate> getByStudent(long student, long section, long department, long year, long dataType) {
 
         List<LocalDate> dateList = new ArrayList<>();
-        MonthlyPresence monthlyPresence = getBySectionAndDataType(section, dataType);
+        MonthlyPresence monthlyPresence = getByFields(section, department, year, dataType);
 
         List<Presence> presenceList = monthlyPresence.getSheetData().getPresenceList();
         if (presenceList.isEmpty()) return dateList;
@@ -52,10 +52,10 @@ public class MonthlyPresenceService {
         return dateList;
     }
 
-    public Map<LocalDate, List<Double>> getByMonth(long section, String dataType, String date) {
+    public Map<LocalDate, List<Double>> getByMonth(long section, long department, long year, long dataType, String date) {
 
         Map<LocalDate, List<Double>> rollMap = new HashMap<>();
-        MonthlyPresence monthlyPresence = getBySectionAndDataType(section, dataType);
+        MonthlyPresence monthlyPresence = getByFields(section, department, year, dataType);
 
         List<Presence> presenceList = monthlyPresence.getSheetData().getPresenceList();
         if (presenceList.isEmpty()) return rollMap;
@@ -73,10 +73,10 @@ public class MonthlyPresenceService {
         return rollMap;
     }
 
-    public List<Double> getByDay(long section, String dataType, String date) {
+    public List<Double> getByDay(long section, long department, long year, long dataType, String date) {
 
         List<Double> rolls = new ArrayList<>();
-        MonthlyPresence monthlyPresence = getBySectionAndDataType(section, dataType);
+        MonthlyPresence monthlyPresence = getByFields(section, department, year, dataType);
 
         List<Presence> presenceList = monthlyPresence.getSheetData().getPresenceList();
         if (presenceList.isEmpty()) return rolls;
@@ -95,10 +95,10 @@ public class MonthlyPresenceService {
         return rolls;
     }
 
-    public List<LocalDate> getByMonthAndStudent(long section, String date, long student, String dataType) {
+    public List<LocalDate> getByMonthAndStudent(long section, long department, long year, String date, long student, long dataType) {
 
         List<LocalDate> dateList = new ArrayList<>();
-        MonthlyPresence monthlyPresence = getBySectionAndDataType(section, dataType);
+        MonthlyPresence monthlyPresence = getByFields(section, department, year, dataType);
 
         List<Presence> presenceList = monthlyPresence.getSheetData().getPresenceList();
         if (presenceList.isEmpty()) return dateList;

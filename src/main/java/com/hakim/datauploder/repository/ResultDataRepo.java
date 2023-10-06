@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ResultDataRepo extends JpaRepository<ResultData,Long> {
-    List<ResultData> findBySectionAndDataType(long section, String dataType);
+    List<ResultData> findBySectionAndDepartmentAndYearAndDataType(long section, long department, long year, long dataType);
 }

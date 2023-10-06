@@ -27,32 +27,46 @@ public class PresenceController {
     }
 
     @GetMapping("/get-by-student")
-    public ResponseEntity<?> getByStudent(@RequestParam long student, @RequestParam long section, @RequestParam String dataType) {
-        List<LocalDate> dates = monthlyPresenceService.getByStudent(student, section, dataType);
+    public ResponseEntity<?> getByStudent(@RequestParam long student,
+                                          @RequestParam long section,
+                                          @RequestParam long department,
+                                          @RequestParam long year,
+                                          @RequestParam long dataType) {
+        List<LocalDate> dates = monthlyPresenceService.getByStudent(student, section, department, year, dataType);
 
         return ResponseEntity.ok(dates);
     }
 
     @GetMapping("/get-by-month")
-    public ResponseEntity<?> getByMonth(@RequestParam long section, @RequestParam String dataType, @RequestParam String date) {
-        Map<LocalDate, List<Double>> rolls = monthlyPresenceService.getByMonth(section, dataType, date);
+    public ResponseEntity<?> getByMonth(@RequestParam long section,
+                                        @RequestParam long department,
+                                        @RequestParam long year,
+                                        @RequestParam long dataType,
+                                        @RequestParam String date) {
+        Map<LocalDate, List<Double>> rolls = monthlyPresenceService.getByMonth(section,department, year, dataType, date);
 
         return ResponseEntity.ok(rolls);
     }
 
     @GetMapping("/get-by-day")
-    public ResponseEntity<?> getByDay(@RequestParam long section, @RequestParam String dataType, @RequestParam String date) {
-        List<Double> rolls = monthlyPresenceService.getByDay(section, dataType, date);
+    public ResponseEntity<?> getByDay(@RequestParam long section,
+                                      @RequestParam long department,
+                                      @RequestParam long year,
+                                      @RequestParam long dataType,
+                                      @RequestParam String date) {
+        List<Double> rolls = monthlyPresenceService.getByDay(section,department, year, dataType, date);
 
         return ResponseEntity.ok(rolls);
     }
 
     @GetMapping("/get-by-month-and-student")
     public ResponseEntity<?> getByMonthAndStudent(@RequestParam long section,
+                                                  @RequestParam long department,
+                                                  @RequestParam long year,
                                                   @RequestParam String date,
                                                   @RequestParam long student,
-                                                  @RequestParam String dataType) {
-        List<LocalDate> dates = monthlyPresenceService.getByMonthAndStudent(section, date, student, dataType);
+                                                  @RequestParam long dataType) {
+        List<LocalDate> dates = monthlyPresenceService.getByMonthAndStudent(section,department, year, date, student, dataType);
 
         return ResponseEntity.ok(dates);
     }

@@ -18,30 +18,30 @@ public class FeeDataController {
 
     private final FeeDataService feeDataService;
 
-    @GetMapping("/get")
-    public ResponseEntity<?> getFeeData(@RequestParam long feeId){
+    @GetMapping("/get-by-id")
+    public ResponseEntity<?> getFeeData(@RequestParam long feeId) {
         FeeData feeData = feeDataService.getById(feeId);
 
         return ResponseEntity.ok(feeData);
     }
 
-    @GetMapping("/get-by-section-and-datatype")
-    public ResponseEntity<?> getBySectionAndDataType(@RequestParam long section,@RequestParam String dataType){
-        List<FeeData> feeDataList = feeDataService.getBySectionAndDataType(section, dataType);
-
-        return ResponseEntity.ok(feeDataList);
-    }
-
-    @GetMapping("/get-by-datatype")
-    public ResponseEntity<?> getByDataType(@RequestParam String dataType){
-        List<FeeData> feeDataList = feeDataService.getByDataType(dataType);
+    @GetMapping("/get")
+    public ResponseEntity<?> getBySectionAndDataType(@RequestParam long section,
+                                                     @RequestParam long department,
+                                                     @RequestParam long year,
+                                                     @RequestParam long dataType) {
+        List<FeeData> feeDataList = feeDataService.getByFields(section, department, year, dataType);
 
         return ResponseEntity.ok(feeDataList);
     }
 
     @GetMapping("/get-by-student")
-    public ResponseEntity<?> getByStudent(@RequestParam double student,@RequestParam long section,@RequestParam String dataType){
+    public ResponseEntity<?> getByStudent(@RequestParam double student,
+                                          @RequestParam long section,
+                                          @RequestParam long department,
+                                          @RequestParam long year,
+                                          @RequestParam long dataType) {
 
-        return ResponseEntity.ok(feeDataService.getByStudent(student, section, dataType));
+        return ResponseEntity.ok(feeDataService.getByStudent(student, section, department, year, dataType));
     }
 }

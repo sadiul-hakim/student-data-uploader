@@ -29,8 +29,8 @@ public class DataImporterService {
     private final SubjectService subjectService;
     private final ResultDataService resultDataService;
 
-    public void save(DataImporter dataImporter) {
-        DataImporter save = dataImporterRepo.save(dataImporter);
+    public DataImporter save(DataImporter dataImporter) {
+        return dataImporterRepo.save(dataImporter);
     }
 
     @Cacheable("dataImporter.getById")
@@ -39,7 +39,7 @@ public class DataImporterService {
                 .orElseThrow(() -> new RuntimeException("Could not get DataImporter by id : " + dataImporterId));
     }
 
-    public boolean importData(InputStream inputStream, long importerId, long section,String fileName) throws IOException {
+    public boolean importData(InputStream inputStream, long importerId, long section, long department, long year, String fileName) throws IOException {
         ExcelReader excelReader = new ExcelReader(inputStream);
 
         DataImporter importer = getById(importerId);
@@ -53,7 +53,9 @@ public class DataImporterService {
 
                 FeeData feeData = generateFeeData(data, importer.getExcelFileDetails().getSheets().get(0).getMainColumn());
                 feeData.setSection(section);
-                feeData.setDataType(importer.getDataSaving().getDataType().name());
+                feeData.setDepartment(department);
+                feeData.setYear(year);
+                feeData.setDataType(importer.getDataSaving().getDataType().getId());
 
                 FeeData save = feeDataService.save(feeData);
                 return save != null;
@@ -62,9 +64,11 @@ public class DataImporterService {
                 Map<String, List<String>> data = excelReader.read(importer.getExcelFileDetails());
 
                 String[] fileNameArr = fileName.split("\\.");
-                ResultData resultData = generateResultData(data, importer.getExcelFileDetails().getSheets().get(0).getMainColumn(),fileNameArr[0]);
+                ResultData resultData = generateResultData(data, importer.getExcelFileDetails().getSheets().get(0).getMainColumn(), fileNameArr[0]);
                 resultData.setSection(section);
-                resultData.setDataType(importer.getDataSaving().getDataType().name());
+                resultData.setDepartment(department);
+                resultData.setYear(year);
+                resultData.setDataType(importer.getDataSaving().getDataType().getId());
 
                 ResultData save = resultDataService.save(resultData);
                 return save != null;
@@ -74,9 +78,11 @@ public class DataImporterService {
 
                 MonthlyPresence monthlyPresence = generateMonthlyPresence(data, importer.getExcelFileDetails().getSheets().get(0).getMainColumn());
                 monthlyPresence.setSection(section);
-                monthlyPresence.setDataType(importer.getDataSaving().getDataType().name());
+                monthlyPresence.setDepartment(department);
+                monthlyPresence.setYear(year);
+                monthlyPresence.setDataType(importer.getDataSaving().getDataType().getId());
 
-                MonthlyPresence existingData = monthlyPresenceService.getBySectionAndDataType(section, importer.getDataSaving().getDataType().name());
+                MonthlyPresence existingData = monthlyPresenceService.getByFields(section,department,year,importer.getDataSaving().getDataType().getId());
                 if (existingData == null) {
                     MonthlyPresence save = monthlyPresenceService.save(monthlyPresence);
                     return save != null;
@@ -163,7 +169,7 @@ public class DataImporterService {
         return feeData;
     }
 
-    private ResultData generateResultData(Map<String, List<String>> data, String mainColumn,String examName) {
+    private ResultData generateResultData(Map<String, List<String>> data, String mainColumn, String examName) {
 
         ResultData resultData = new ResultData();
         ResultSheet resultSheet = new ResultSheet();

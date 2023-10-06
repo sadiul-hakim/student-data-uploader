@@ -14,19 +14,19 @@ import java.util.Collections;
 @RequiredArgsConstructor
 @RequestMapping("/data-importer")
 public class DataImporterController {
-    
+
     private final DataImporterService dataImporterService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> upload(@RequestBody DataImporter dataImporter){
+    public ResponseEntity<?> save(@RequestBody DataImporter dataImporter) {
 
-        dataImporterService.save(dataImporter);
+        DataImporter save = dataImporterService.save(dataImporter);
 
-        return ResponseEntity.ok(Collections.singletonMap("message","DataImporter is saved successfully!"));
+        return ResponseEntity.ok(save);
     }
 
     @GetMapping("/get")
-    public ResponseEntity<?> get(@RequestParam long importerId){
+    public ResponseEntity<?> get(@RequestParam long importerId) {
         DataImporter dataImporter = dataImporterService.getById(importerId);
 
         return ResponseEntity.ok(dataImporter);
@@ -35,14 +35,16 @@ public class DataImporterController {
     @PostMapping("/import")
     public ResponseEntity<?> importData(@RequestParam MultipartFile file,
                                         @RequestParam long importerId,
-                                        @RequestParam long section) throws IOException {
+                                        @RequestParam long section,
+                                        @RequestParam long department,
+                                        @RequestParam long year) throws IOException {
 
-        boolean saved = dataImporterService.importData(file.getInputStream(), importerId,section,file.getOriginalFilename());
+        boolean saved = dataImporterService.importData(file.getInputStream(), importerId, section, department, year, file.getOriginalFilename());
 
-        if(!saved){
-            return ResponseEntity.ok(Collections.singletonMap("error","Could not import data"));
+        if (!saved) {
+            return ResponseEntity.ok(Collections.singletonMap("error", "Could not import data"));
         }
 
-        return ResponseEntity.ok(Collections.singletonMap("message","successfully imported data!"));
+        return ResponseEntity.ok(Collections.singletonMap("message", "successfully imported data!"));
     }
 }

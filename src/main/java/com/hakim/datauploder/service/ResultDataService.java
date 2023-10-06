@@ -27,16 +27,16 @@ public class ResultDataService {
                 .orElseThrow(() -> new RuntimeException("Could not find by id: " + id));
     }
 
-    public List<ResultData> getBySectionAndDataType(long section, String dataType) {
+    public List<ResultData> getByFields(long section, long department, long year, long dataType) {
 
-        return repo.findBySectionAndDataType(section, dataType);
+        return repo.findBySectionAndDepartmentAndYearAndDataType(section, department, year, dataType);
     }
 
-    public Map<String, Map<String, Map<String, Double>>> getByStudent(double student, long section, String dataType) {
+    public Map<String, Map<String, Map<String, Double>>> getByStudent(double student, long section, long department, long year, long dataType) {
 
         Map<String, Map<String, Map<String, Double>>> resultsWithRoll = new HashMap<>();
 
-        List<ResultData> resultDataList = getBySectionAndDataType(section, dataType);
+        List<ResultData> resultDataList = getByFields(section, department, year, dataType);
         Map<String, Map<String, Double>> resultWithExamName = new HashMap<>();
         for (ResultData resultData : resultDataList) {
 
@@ -56,17 +56,17 @@ public class ResultDataService {
         for (Map.Entry<String, Map<String, Map<String, Double>>> entry : resultsWithRoll.entrySet()) {
 
             Map<String, Map<String, Double>> feesWithName = getResultsWithName(entry.getValue());
-            resultsWithRoll.put(entry.getKey(),feesWithName);
+            resultsWithRoll.put(entry.getKey(), feesWithName);
         }
 
         return resultsWithRoll;
     }
 
-    public Map<String, Map<String, Double>> getByExam(String exam, long section, String dataType) {
+    public Map<String, Map<String, Double>> getByExam(String exam, long section, long department, long year, long dataType) {
 
         Map<String, Map<String, Double>> resultsWithRoll = new HashMap<>();
 
-        List<ResultData> resultDataList = getBySectionAndDataType(section, dataType);
+        List<ResultData> resultDataList = getByFields(section, department, year, dataType);
         for (ResultData resultData : resultDataList) {
 
             List<StudentResult> studentResults = resultData.getSheetData().getStudentResults();
@@ -75,7 +75,7 @@ public class ResultDataService {
                 String roll = studentResult.getStudentRoll();
                 String examName = resultData.getSheetData().getExamName();
                 if (examName.equalsIgnoreCase(exam)) {
-                    resultsWithRoll.put(roll,studentResult.getResult());
+                    resultsWithRoll.put(roll, studentResult.getResult());
                 }
             }
         }
@@ -92,7 +92,7 @@ public class ResultDataService {
                 Subject subject = subjectService.getById(Long.parseLong(entry.getKey()));
                 temp.put(subject.getName(), entry.getValue());
             }
-            fees.put(stringMapEntry.getKey(),temp);
+            fees.put(stringMapEntry.getKey(), temp);
         }
 
         return fees;

@@ -13,21 +13,21 @@ import java.util.List;
 public class StudentService {
     private final StudentRepo studentRepo;
 
-    public Student save(Student student){
+    public Student save(Student student) {
         return studentRepo.save(student);
     }
 
     @Cacheable("student.getById")
-    public Student getById(long studentRoll,long section){
-        return studentRepo.findByStudentRollAndSection(studentRoll,section)
+    public Student getByStudentRoll(long studentRoll, long section, long department, long year) {
+        return studentRepo.findByStudentRollAndSectionAndDepartmentAndYear(studentRoll, section, department, year)
                 .orElseThrow(() -> new RuntimeException("Could not find student by roll: " + studentRoll));
     }
 
-    public List<Student> getAll(){
+    public List<Student> getAll() {
         return studentRepo.findAll();
     }
 
-    public List<Student> getBySection(long section){
-        return studentRepo.findAllBySection(section);
+    public List<Student> getByDepartment(long section, long department, long year) {
+        return studentRepo.findAllBySectionAndDepartmentAndYear(section, department, year);
     }
 }

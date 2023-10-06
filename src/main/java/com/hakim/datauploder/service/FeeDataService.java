@@ -9,7 +9,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,21 +30,16 @@ public class FeeDataService {
                 .orElseThrow(() -> new RuntimeException("Could not find by id: " + id));
     }
 
-    public List<FeeData> getBySectionAndDataType(long section, String dataType) {
+    public List<FeeData> getByFields(long section, long department, long year, long dataType) {
 
-        return repo.findBySectionAndDataType(section, dataType);
+        return repo.findBySectionAndDepartmentAndYearAndDataType(section, department, year, dataType);
     }
 
-    public List<FeeData> getByDataType(String dataType) {
-
-        return repo.findByDataType(dataType);
-    }
-
-    public Map<String, Map<String, Map<String, Double>>> getByStudent(double student, long section, String dataType) {
+    public Map<String, Map<String, Map<String, Double>>> getByStudent(double student, long section, long department, long year, long dataType) {
 
         Map<String, Map<String, Map<String, Double>>> feesWithRoll = new HashMap<>();
 
-        List<FeeData> feeDataList = getBySectionAndDataType(section, dataType);
+        List<FeeData> feeDataList = getByFields(section, department, year, dataType);
         Map<String, Map<String, Double>> feeWithDate = new HashMap<>();
         for (FeeData feeData : feeDataList) {
 
@@ -65,7 +59,7 @@ public class FeeDataService {
         for (Map.Entry<String, Map<String, Map<String, Double>>> entry : feesWithRoll.entrySet()) {
 
             Map<String, Map<String, Double>> feesWithName = getFeesWithName(entry.getValue());
-            feesWithRoll.put(entry.getKey(),feesWithName);
+            feesWithRoll.put(entry.getKey(), feesWithName);
         }
 
         return feesWithRoll;
@@ -82,7 +76,7 @@ public class FeeDataService {
                 temp.put(fee.getName(), entry.getValue());
             }
 
-            fees.put(stringMapEntry.getKey(),temp);
+            fees.put(stringMapEntry.getKey(), temp);
         }
 
         return fees;
