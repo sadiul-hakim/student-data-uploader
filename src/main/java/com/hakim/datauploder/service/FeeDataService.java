@@ -35,12 +35,15 @@ public class FeeDataService {
         return repo.findBySectionAndDepartmentAndYearAndDataType(section, department, year, dataType);
     }
 
-    public Map<String, Map<String, Map<String, Double>>> getByStudent(double student, long section, long department, long year, long dataType) {
+    /**
+     * This method return Fee Data of a student. It returns
+     * Map<Date,Map<Fee,Value>>
+     */
+    public Map<String, Map<String, Double>> getByStudent(double student, long section, long department, long year, long dataType) {
 
-        Map<String, Map<String, Map<String, Double>>> feesWithRoll = new HashMap<>();
+        Map<String, Map<String, Double>> fees = new HashMap<>();
 
         List<FeeData> feeDataList = getByFields(section, department, year, dataType);
-        Map<String, Map<String, Double>> feeWithDate = new HashMap<>();
         for (FeeData feeData : feeDataList) {
 
             List<StudentFee> studentFees = feeData.getSheetData().getStudentFees();
@@ -50,19 +53,12 @@ public class FeeDataService {
                 String date = DateUtil.format(feeData.getSheetData().getDate());
                 if (Double.parseDouble(roll) == student) {
 
-                    feeWithDate.put(date, studentFee.getFees());
-                    feesWithRoll.put(roll, feeWithDate);
+                    fees.put(date, studentFee.getFees());
                 }
             }
         }
 
-        for (Map.Entry<String, Map<String, Map<String, Double>>> entry : feesWithRoll.entrySet()) {
-
-            Map<String, Map<String, Double>> feesWithName = getFeesWithName(entry.getValue());
-            feesWithRoll.put(entry.getKey(), feesWithName);
-        }
-
-        return feesWithRoll;
+        return getFeesWithName(fees);
     }
 
     private Map<String, Map<String, Double>> getFeesWithName(Map<String, Map<String, Double>> fees) {

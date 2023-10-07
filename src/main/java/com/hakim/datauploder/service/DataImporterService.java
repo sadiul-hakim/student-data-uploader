@@ -43,13 +43,10 @@ public class DataImporterService {
         ExcelReader excelReader = new ExcelReader(inputStream);
 
         DataImporter importer = getById(importerId);
-        if (importer == null) {
-            return false;
-        }
 
+        Map<String, List<String>> data = excelReader.read(importer.getExcelFileDetails());
         switch (importer.getDataSaving().getDataType()) {
             case FEE -> {
-                Map<String, List<String>> data = excelReader.read(importer.getExcelFileDetails());
 
                 FeeData feeData = generateFeeData(data, importer.getExcelFileDetails().getSheets().get(0).getMainColumn());
                 feeData.setSection(section);
@@ -61,7 +58,6 @@ public class DataImporterService {
                 return save != null;
             }
             case EXAM_RESULT -> {
-                Map<String, List<String>> data = excelReader.read(importer.getExcelFileDetails());
 
                 String[] fileNameArr = fileName.split("\\.");
                 ResultData resultData = generateResultData(data, importer.getExcelFileDetails().getSheets().get(0).getMainColumn(), fileNameArr[0]);
@@ -74,7 +70,6 @@ public class DataImporterService {
                 return save != null;
             }
             case PRESENCE -> {
-                Map<String, List<String>> data = excelReader.read(importer.getExcelFileDetails());
 
                 MonthlyPresence monthlyPresence = generateMonthlyPresence(data, importer.getExcelFileDetails().getSheets().get(0).getMainColumn());
                 monthlyPresence.setSection(section);
@@ -82,14 +77,13 @@ public class DataImporterService {
                 monthlyPresence.setYear(year);
                 monthlyPresence.setDataType(importer.getDataSaving().getDataType().getId());
 
-                MonthlyPresence existingData = monthlyPresenceService.getByFields(section,department,year,importer.getDataSaving().getDataType().getId());
-                if (existingData == null) {
-                    MonthlyPresence save = monthlyPresenceService.save(monthlyPresence);
-                    return save != null;
-                } else {
-                    existingData.getSheetData().getPresenceList().addAll(monthlyPresence.getSheetData().getPresenceList());
+                MonthlyPresence existingData = monthlyPresenceService.getByFields(section, department, year, importer.getDataSaving().getDataType().getId());
+                if (existingData != null) {
+                    monthlyPresence.getSheetData().getPresenceList().addAll(existingData.getSheetData().getPresenceList());
+                    monthlyPresence.setId(existingData.getId());
                 }
-                MonthlyPresence save = monthlyPresenceService.save(existingData);
+
+                MonthlyPresence save = monthlyPresenceService.save(monthlyPresence);
                 return save != null;
             }
             default -> {

@@ -32,12 +32,11 @@ public class ResultDataService {
         return repo.findBySectionAndDepartmentAndYearAndDataType(section, department, year, dataType);
     }
 
-    public Map<String, Map<String, Map<String, Double>>> getByStudent(double student, long section, long department, long year, long dataType) {
+    public Map<String, Map<String, Double>> getByStudent(double student, long section, long department, long year, long dataType) {
 
-        Map<String, Map<String, Map<String, Double>>> resultsWithRoll = new HashMap<>();
+        Map<String, Map<String, Double>> results = new HashMap<>();
 
         List<ResultData> resultDataList = getByFields(section, department, year, dataType);
-        Map<String, Map<String, Double>> resultWithExamName = new HashMap<>();
         for (ResultData resultData : resultDataList) {
 
             List<StudentResult> studentResults = resultData.getSheetData().getStudentResults();
@@ -47,19 +46,12 @@ public class ResultDataService {
                 String examName = resultData.getSheetData().getExamName();
                 if (Double.parseDouble(roll) == student) {
 
-                    resultWithExamName.put(examName, studentResult.getResult());
-                    resultsWithRoll.put(roll, resultWithExamName);
+                    results.put(examName, studentResult.getResult());
                 }
             }
         }
 
-        for (Map.Entry<String, Map<String, Map<String, Double>>> entry : resultsWithRoll.entrySet()) {
-
-            Map<String, Map<String, Double>> feesWithName = getResultsWithName(entry.getValue());
-            resultsWithRoll.put(entry.getKey(), feesWithName);
-        }
-
-        return resultsWithRoll;
+        return getResultsWithName(results);
     }
 
     public Map<String, Map<String, Double>> getByExam(String exam, long section, long department, long year, long dataType) {

@@ -33,8 +33,14 @@ public class SubjectService {
                 .orElseThrow(() -> new RuntimeException("Subject not found with name : " + name));
     }
 
-    public List<Subject> getAll(){
+    public List<Subject> getAll() {
 
         return subjectRepo.findAll();
+    }
+
+    @Cacheable("subject.getBySectionAndDepartmentAndYear")
+    public List<Subject> getBySectionAndDepartmentAndYear(long section, long department, long year) {
+
+        return subjectRepo.findBySectionAndDepartmentAndYear(section, department, year);
     }
 }
